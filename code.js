@@ -11,6 +11,8 @@ const PSI_CRIT_PCT  = 10;   // red below this fill level
 const SCALE_MIN     = 0.5;  // resize limits
 const SCALE_MAX     = 3;
 const SCALE_STEP    = 0.05; // per wheel notch
+const DBLCLICK_MS   = 250;  // single click waits this long for a possible double-click
+const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 
 this.host_el   = null;
 this.oxi_el    = null;
@@ -19,6 +21,7 @@ this.lever_el  = null;
 this.bottle_el = null;
 this.fill_el   = null;
 this.psi_el    = null;
+this.clickTimer = null;
 
 this.widgetStore = {
     // Widget position (persisted)
@@ -47,6 +50,11 @@ const saveStore = () => {
 const applyScale = () => {
     if (!this.host_el) return;
     this.host_el.style.transform = `scale(${this.widgetStore.scale})`;
+};
+
+const toggleOxygen = () => {
+    const on = Number(this.$api.variables.get('L:var_OxygenOn', 'number')) >= 0.5;
+    this.$api.variables.set('L:var_OxygenOn', 'number', on ? 0 : 1);
 };
 
 // One wheel notch = SCALE_STEP bigger (dir 1) or smaller (dir -1)
@@ -153,6 +161,46 @@ html_created(el => {
     };
     this.host_el.addEventListener('wheel',      onWheel);
     this.host_el.addEventListener('mousewheel', onWheel);
+
+    // Remember where the mouse went down, so a drag isn't taken as a click
+    let downX = 0;
+    let downY = 0;
+    this.host_el.addEventListener('mousedown', (e) => {
+        downX = e.clientX;
+        downY = e.clientY;
+    }, true);
+    const wasDrag = (e) => Math.abs(e.clientX - downX) > DRAG_PX || Math.abs(e.clientY - downY) > DRAG_PX;
+
+    // Clicks arrive with the widget itself as target (Flow's drag handling),
+    // so hit-test the lever by coordinates instead of relying on e.target
+    const onLever = (e) => {
+        const r = this.lever_el.getBoundingClientRect();
+        return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    };
+
+    // Single click on the lever toggles oxygen (delayed, a double-click cancels it)
+    this.host_el.addEventListener('click', (e) => {
+        if (wasDrag(e) || !onLever(e)) return;
+        clearTimeout(this.clickTimer);
+        this.clickTimer = setTimeout(() => {
+            this.clickTimer = null;
+            toggleOxygen();
+        }, DBLCLICK_MS);
+    });
+
+    // Double-click anywhere on the widget restores the default size
+    this.host_el.addEventListener('dblclick', (e) => {
+        clearTimeout(this.clickTimer);
+        this.clickTimer = null;
+        this.widgetStore.scale = 1;
+        applyScale();
+        saveStore();
+        e.stopPropagation();
+    });
+});
+
+exit(() => {
+    clearTimeout(this.clickTimer);
 });
 
 // Scrolling over the Flow tile resizes too

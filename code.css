@@ -144,6 +144,7 @@
     border-radius: 8px;
     background: linear-gradient(to right, #24282c 0%, #33383d 50%, #24282c 100%);
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+    cursor: pointer;
 }
 
 .Ape42_bksqo_lever_title {

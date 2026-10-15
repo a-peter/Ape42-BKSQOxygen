@@ -10,6 +10,8 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 - Click the Flow tile to show/hide the overlay.
 - Drag the overlay to reposition it — the position is saved automatically.
 - Use the mouse wheel over the overlay (or over the Flow tile) to resize it — the size is saved automatically.
+- Click the lever to switch the oxygen supply on/off.
+- Double-click the overlay to restore the default size.
 
 ## Variables
 
