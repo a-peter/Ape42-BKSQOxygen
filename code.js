@@ -11,6 +11,7 @@ const PSI_CRIT_PCT  = 10;   // red below this fill level
 const SCALE_MIN     = 0.5;  // resize limits
 const SCALE_MAX     = 3;
 const SCALE_STEP    = 0.05; // per wheel notch
+const BASE_FONT_PX  = 16;   // 1em at 100 %, must match code.css
 const DBLCLICK_MS   = 250;  // single click waits this long for a possible double-click
 const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 
@@ -47,9 +48,11 @@ const saveStore = () => {
     this.$api.datastore.export({ posX: ws.posX, posY: ws.posY, scale: ws.scale });
 };
 
+// All CSS sizes are em, so changing the base font size re-renders sharply
+// (transform: scale() would only stretch the rendered bitmap)
 const applyScale = () => {
     if (!this.host_el) return;
-    this.host_el.style.transform = `scale(${this.widgetStore.scale})`;
+    this.host_el.style.fontSize = `${BASE_FONT_PX * this.widgetStore.scale}px`;
 };
 
 const toggleOxygen = () => {
