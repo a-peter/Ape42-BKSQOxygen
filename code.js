@@ -8,6 +8,9 @@ const SPO2_LOW      = 90;   // below: moderate hypoxemia -> orange
 const SPO2_CRIT     = 85;   // below: severe hypoxemia   -> red
 const PSI_LOW_PCT   = 25;   // amber below this fill level
 const PSI_CRIT_PCT  = 10;   // red below this fill level
+const SCALE_MIN     = 0.5;  // resize limits
+const SCALE_MAX     = 3;
+const SCALE_STEP    = 0.05; // per wheel notch
 
 this.host_el   = null;
 this.oxi_el    = null;
@@ -21,6 +24,8 @@ this.widgetStore = {
     // Widget position (persisted)
     posX: null,
     posY: null,
+    // Widget size factor (persisted)
+    scale: 1,
     // Runtime state (not persisted)
     manualHide: false,
     spo2:       null,
@@ -32,6 +37,26 @@ this.widgetStore.manualHide = false; // always start visible
 this.widgetStore.spo2       = null;
 this.widgetStore.oxygenOn   = null;
 this.widgetStore.psi        = null;
+
+// Persist only position and size
+const saveStore = () => {
+    const ws = this.widgetStore;
+    this.$api.datastore.export({ posX: ws.posX, posY: ws.posY, scale: ws.scale });
+};
+
+const applyScale = () => {
+    if (!this.host_el) return;
+    this.host_el.style.transform = `scale(${this.widgetStore.scale})`;
+};
+
+// One wheel notch = SCALE_STEP bigger (dir 1) or smaller (dir -1)
+const resizeBy = (dir) => {
+    const ws    = this.widgetStore;
+    const scale = Math.round((ws.scale + dir * SCALE_STEP) * 100) / 100;
+    ws.scale = Math.max(SCALE_MIN, Math.min(SCALE_MAX, scale));
+    applyScale();
+    saveStore();
+};
 
 run(() => {
     this.widgetStore.manualHide = !this.widgetStore.manualHide;
@@ -79,7 +104,7 @@ loop_15hz(() => {
     if (!isNaN(posX) && !isNaN(posY) && (posX !== ws.posX || posY !== ws.posY)) {
         ws.posX = posX;
         ws.posY = posY;
-        this.$api.datastore.export({ posX: posX, posY: posY });
+        saveStore();
     }
 });
 
@@ -114,4 +139,23 @@ html_created(el => {
         this.host_el.style.top  = `${this.widgetStore.posY}px`;
     }
     this.host_el.classList.toggle('visible', !this.widgetStore.manualHide);
+    applyScale();
+
+    // Resize with the mouse wheel over the widget
+    let sawWheel = false;
+    const onWheel = (e) => {
+        if (e.type === 'wheel') sawWheel = true;
+        else if (sawWheel) return; // 'mousewheel' fallback only if 'wheel' isn't fired
+        const up = e.type === 'wheel' ? e.deltaY < 0 : e.wheelDelta > 0;
+        resizeBy(up ? 1 : -1);
+        e.preventDefault();
+        e.stopPropagation();
+    };
+    this.host_el.addEventListener('wheel',      onWheel);
+    this.host_el.addEventListener('mousewheel', onWheel);
+});
+
+// Scrolling over the Flow tile resizes too
+scroll((event) => {
+    if (event.scroll) resizeBy(event.scroll > 0 ? 1 : -1);
 });

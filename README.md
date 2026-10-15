@@ -9,6 +9,7 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 - **Oxygen bottle** (right): fill level and pressure in PSI (full = 1850 PSI). Amber below 25 %, red below 10 %.
 - Click the Flow tile to show/hide the overlay.
 - Drag the overlay to reposition it — the position is saved automatically.
+- Use the mouse wheel over the overlay (or over the Flow tile) to resize it — the size is saved automatically.
 
 ## Variables
 

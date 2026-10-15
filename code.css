@@ -10,6 +10,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     font-family: Consolas, monospace;
     pointer-events: all;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
 }
 
 #Ape42_bksqo.visible {
