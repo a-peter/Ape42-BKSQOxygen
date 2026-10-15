@@ -1,0 +1,22 @@
+{
+	"app_version": "2025.51.4.22",
+	"scripts": [
+		{
+			"code": "javascript",
+			"name": "BKSQ Oxygen",
+			"short": "mdi:gas-cylinder",
+			"uid": "6a136c4e-96ff-4928-bd14-0871307f4ba0",
+			"params": {
+				"code_js": "",
+				"code_css": "",
+				"code_html": "",
+				"last_edit": 0,
+				"description": "Shows the oxygen system of the Black Square Caravan 208: pulse oximeter, oxygen lever and bottle pressure.",
+				"aircraft": null,
+				"tags": "Misc.",
+				"creator": "Ape42_3060",
+				"package": "p42-util-flow-ape42_3060-bksqoxygen"
+			}
+		}
+	]
+}

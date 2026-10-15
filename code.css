@@ -1,0 +1,287 @@
+/* Coherent GT = Chrome 49: no flex gap, no `inset`, keep it simple */
+
+#Ape42_bksqo {
+    display: none;
+    position: absolute;
+    padding: 12px;
+    background: linear-gradient(to bottom, #2a2f35 0%, #1a1d21 100%);
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    font-family: Consolas, monospace;
+    pointer-events: all;
+}
+
+#Ape42_bksqo.visible {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+#Ape42_bksqo sub {
+    font-size: 0.7em;
+    vertical-align: -0.25em;
+    line-height: 0;
+}
+
+/* ── Pulse oximeter ──────────────────────────────────────────────────────── */
+
+.Ape42_bksqo_oxi {
+    position: relative;
+    width: 104px;
+    height: 160px;
+    margin-right: 14px;
+}
+
+/* Upper jaw of the finger clip */
+.Ape42_bksqo_oxi_clip {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 84px;
+    height: 34px;
+    border-radius: 16px 16px 6px 6px;
+    border: 1px solid #7d8790;
+    background: linear-gradient(to bottom, #f2f5f8 0%, #c7cfd7 70%, #9aa4ae 100%);
+}
+
+/* Finger gap */
+.Ape42_bksqo_oxi_slot {
+    position: absolute;
+    top: 35px;
+    left: 16px;
+    width: 72px;
+    height: 7px;
+    border-radius: 4px;
+    background: #120c0a;
+}
+
+.Ape42_bksqo_oxi_body {
+    position: absolute;
+    top: 42px;
+    left: 0;
+    width: 100px;
+    height: 114px;
+    border-radius: 14px 14px 24px 24px;
+    border: 2px solid #2f63ad;
+    background: linear-gradient(to right, #b9c3cd 0%, #f4f7fa 30%, #e3e8ed 65%, #a9b4bf 100%);
+}
+
+/* Power button */
+.Ape42_bksqo_oxi_body::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 42px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #6f9ee0 0%, #2f63ad 70%, #1d3f70 100%);
+}
+
+.Ape42_bksqo_oxi_screen {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 76px;
+    height: 68px;
+    border: 2px solid #20262c;
+    border-radius: 6px;
+    background: #03070b;
+    box-shadow: inset 0 0 8px rgba(53, 224, 255, 0.15);
+}
+
+.Ape42_bksqo_oxi_label {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #35e0ff;
+}
+
+.Ape42_bksqo_oxi_value {
+    position: absolute;
+    top: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    line-height: 44px;
+    font-weight: bold;
+    color: #35e0ff;
+}
+
+.Ape42_bksqo_oxi_heart {
+    position: absolute;
+    top: 3px;
+    right: 6px;
+    font-size: 12px;
+    color: #ff3b4e;
+    animation: Ape42_bksqo_beat 1s infinite;
+}
+
+@keyframes Ape42_bksqo_beat {
+    0%   { opacity: 1; }
+    30%  { opacity: 0.15; }
+    100% { opacity: 1; }
+}
+
+.Ape42_bksqo_oxi.spo2-low  .Ape42_bksqo_oxi_value { color: #ffc400; }
+.Ape42_bksqo_oxi.spo2-crit .Ape42_bksqo_oxi_value { color: #ff3b4e; }
+
+/* ── Oxygen lever ────────────────────────────────────────────────────────── */
+
+.Ape42_bksqo_lever {
+    position: relative;
+    width: 84px;
+    height: 160px;
+    margin-right: 14px;
+    border: 1px solid #45494e;
+    border-radius: 8px;
+    background: linear-gradient(to right, #24282c 0%, #33383d 50%, #24282c 100%);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.Ape42_bksqo_lever_title {
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #d8d8d8;
+}
+
+.Ape42_bksqo_lever_label {
+    position: absolute;
+    right: 7px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #8a8f94;
+}
+
+.Ape42_bksqo_lever_off { top: 8px; }
+.Ape42_bksqo_lever_on  { bottom: 8px; }
+
+.Ape42_bksqo_lever.oxygen-off .Ape42_bksqo_lever_off { color: #ffffff; }
+.Ape42_bksqo_lever.oxygen-on  .Ape42_bksqo_lever_on  { color: #4cff7a; }
+
+/* Vertical guide slot the lever runs in */
+.Ape42_bksqo_lever_slot {
+    position: absolute;
+    left: 37px;
+    top: 22px;
+    width: 10px;
+    height: 116px;
+    border-radius: 5px;
+    background: #050505;
+    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.9), 0 0 0 1px #4a4f54;
+}
+
+/* Ivory cylinder grip, centred on the slot: up = OFF, down = ON */
+.Ape42_bksqo_lever_grip {
+    position: absolute;
+    left: 14px;
+    top: 24px;
+    width: 56px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(to bottom, #c4b38c 0%, #e9e0c6 20%, #fffef8 50%, #e9e0c6 80%, #bfae86 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    -webkit-transition: top 0.4s ease-in-out;
+    transition: top 0.4s ease-in-out;
+}
+
+.Ape42_bksqo_lever.oxygen-on .Ape42_bksqo_lever_grip {
+    top: 108px;
+}
+
+/* ── Oxygen bottle ───────────────────────────────────────────────────────── */
+
+.Ape42_bksqo_bottle {
+    position: relative;
+    width: 64px;
+    height: 160px;
+}
+
+/* Hand wheel */
+.Ape42_bksqo_bottle_valve {
+    position: absolute;
+    top: 0;
+    left: 18px;
+    width: 28px;
+    height: 9px;
+    border-radius: 3px;
+    background: linear-gradient(to bottom, #555 0%, #111 100%);
+}
+
+.Ape42_bksqo_bottle_neck {
+    position: absolute;
+    top: 9px;
+    left: 25px;
+    width: 14px;
+    height: 13px;
+    background: linear-gradient(to right, #8a6a24 0%, #e3c46e 40%, #b48a32 100%);
+}
+
+.Ape42_bksqo_bottle_body {
+    position: absolute;
+    top: 22px;
+    left: 4px;
+    width: 56px;
+    height: 114px;
+    border-radius: 26px 26px 10px 10px;
+    background: linear-gradient(to right, #12461a 0%, #3f9a46 32%, #2e7d32 60%, #103d14 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.Ape42_bksqo_bottle_text {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Gauge window showing the fill level */
+.Ape42_bksqo_bottle_window {
+    position: absolute;
+    top: 34px;
+    left: 20px;
+    width: 14px;
+    height: 68px;
+    overflow: hidden;
+    border: 1px solid #06200a;
+    border-radius: 4px;
+    background: #071309;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.9);
+}
+
+.Ape42_bksqo_bottle_fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(to right, #6fcff5 0%, #d6f5ff 45%, #5cc0ea 100%);
+    -webkit-transition: height 0.5s linear;
+    transition: height 0.5s linear;
+}
+
+.Ape42_bksqo_bottle.psi-low  .Ape42_bksqo_bottle_fill { background: linear-gradient(to right, #d99a00 0%, #ffe07a 45%, #d99a00 100%); }
+.Ape42_bksqo_bottle.psi-crit .Ape42_bksqo_bottle_fill { background: linear-gradient(to right, #c0142a 0%, #ff7a86 45%, #c0142a 100%); }
+
+.Ape42_bksqo_bottle_psi {
+    position: absolute;
+    bottom: 0;
+    left: -6px;
+    width: 76px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #d8d8d8;
+    white-space: nowrap;
+}

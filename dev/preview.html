@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>BKSQ Oxygen preview</title>
+<link rel="stylesheet" href="/code.css">
+<style>
+    body { margin: 0; height: 100vh; background: #6b7f93 linear-gradient(to bottom, #8fb3d6, #4d5f70); font-family: sans-serif; }
+    #controls { position: fixed; right: 16px; top: 16px; padding: 12px; background: rgba(255,255,255,0.9); border-radius: 8px; font-size: 13px; }
+    #controls label { display: block; margin: 6px 0; }
+    #controls input[type=range] { width: 220px; vertical-align: middle; }
+    #info { margin-top: 8px; white-space: pre; font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+<div id="controls">
+    <label>var_PulseOxyPercent <input id="c_spo2" type="range" min="0" max="100" step="0.1" value="97.6"> <span id="v_spo2"></span></label>
+    <label>var_OxygenOn <input id="c_on" type="checkbox"></label>
+    <label>var_OxygenPressure <input id="c_psi" type="range" min="0" max="1850" step="0.5" value="1620.3"> <span id="v_psi"></span></label>
+    <button id="c_run">run() (toggle)</button>
+    <div id="info"></div>
+</div>
+<div id="widget_root"></div>
+
+<script>
+// ── Mock of the Flow runtime ────────────────────────────────────────────────
+var hooks = {};
+var lvars = {};
+['run', 'loop_15hz', 'state', 'style', 'info', 'html_created', 'exit'].forEach(function (n) {
+    window[n] = function (fn) { hooks[n] = fn; };
+});
+window.settings_define = function () {};
+window.search = function () {};
+window.$api = {
+    variables: { get: function (name) { return lvars[name]; }, set: function (name, unit, v) { lvars[name] = v; } },
+    datastore: { import: function (s) { return s; }, export: function () {} },
+};
+
+function syncInputs() {
+    lvars['L:var_PulseOxyPercent'] = parseFloat(document.getElementById('c_spo2').value);
+    lvars['L:var_OxygenOn']        = document.getElementById('c_on').checked ? 1 : 0;
+    lvars['L:var_OxygenPressure']  = parseFloat(document.getElementById('c_psi').value);
+    document.getElementById('v_spo2').textContent = lvars['L:var_PulseOxyPercent'];
+    document.getElementById('v_psi').textContent  = lvars['L:var_OxygenPressure'];
+}
+document.querySelectorAll('#controls input').forEach(function (i) { i.addEventListener('input', syncInputs); });
+document.getElementById('c_run').addEventListener('click', function () { hooks.run && hooks.run({ from: 'debugger' }); });
+syncInputs();
+
+Promise.all([
+    fetch('/code.html').then(function (r) { return r.text(); }),
+    fetch('/code.js').then(function (r) { return r.text(); }),
+]).then(function (res) {
+    var root = document.getElementById('widget_root');
+    root.innerHTML = res[0];
+    var host = root.querySelector('#Ape42_bksqo');
+    host.style.left = '320px';
+    host.style.top  = '40px';
+    // Run code.js with `this` bound to a widget context, like Flow does
+    var ctx = { $api: window.$api };
+    new Function(res[1]).call(ctx);
+    hooks.html_created(root);
+    setInterval(function () {
+        hooks.loop_15hz();
+        document.getElementById('info').textContent =
+            'state: ' + hooks.state() + '\nstyle: ' + hooks.style() + '\ninfo:\n' + hooks.info();
+    }, 1000 / 15);
+});
+</script>
+</body>
+</html>
