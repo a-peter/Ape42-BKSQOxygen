@@ -4,8 +4,8 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 
 ## Features
 
-- **Pulse oximeter** (left): blood oxygen saturation in %, rounded to whole numbers. Amber below 90 %, red below 80 %.
-- **Oxygen lever** (middle): ivory grip on a black metal lever — up = OFF, down = ON.
+- **Pulse oximeter** (left): blood oxygen saturation in %, rounded to whole numbers. Colour follows clinical thresholds: normal ≥ 95 %, yellow 90–94 % (mild hypoxemia), orange 85–89 % (moderate), red below 85 % (severe).
+- **Oxygen lever** (middle): ivory cylinder grip sliding vertically in a slot — up = OFF, down = ON.
 - **Oxygen bottle** (right): fill level and pressure in PSI (full = 1850 PSI). Amber below 25 %, red below 10 %.
 - Click the Flow tile to show/hide the overlay.
 - Drag the overlay to reposition it — the position is saved automatically.
@@ -24,8 +24,6 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 2. Quit Microsoft Flight Simulator.
 3. Extract the zip into your MSFS **Community** folder.
 4. Start the sim, open Flow Pro — the widget appears in the Community section of the editor.
-
-> **MSFS 2024:** The folder name must additionally be registered in Flow Pro. Refer to the official Flow Pro documentation for details.
 
 ## Development
 

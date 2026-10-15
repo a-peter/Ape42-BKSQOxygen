@@ -2,8 +2,10 @@
 // Author: Ape42
 
 const PSI_MAX       = 1850; // full bottle
-const SPO2_LOW      = 90;   // amber below this
-const SPO2_CRIT     = 80;   // red below this
+// SpO2 colour bands (common clinical hypoxemia thresholds)
+const SPO2_MILD     = 95;   // below: mild hypoxemia     -> yellow
+const SPO2_LOW      = 90;   // below: moderate hypoxemia -> orange
+const SPO2_CRIT     = 85;   // below: severe hypoxemia   -> red
 const PSI_LOW_PCT   = 25;   // amber below this fill level
 const PSI_CRIT_PCT  = 10;   // red below this fill level
 
@@ -51,6 +53,7 @@ loop_15hz(() => {
         this.spo2_el.textContent = spo2;
         this.oxi_el.classList.toggle('spo2-crit', spo2 < SPO2_CRIT);
         this.oxi_el.classList.toggle('spo2-low',  spo2 >= SPO2_CRIT && spo2 < SPO2_LOW);
+        this.oxi_el.classList.toggle('spo2-mild', spo2 >= SPO2_LOW  && spo2 < SPO2_MILD);
     }
 
     // Oxygen lever: up = off, down = on

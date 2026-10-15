@@ -127,7 +127,8 @@
     100% { opacity: 1; }
 }
 
-.Ape42_bksqo_oxi.spo2-low  .Ape42_bksqo_oxi_value { color: #ffc400; }
+.Ape42_bksqo_oxi.spo2-mild .Ape42_bksqo_oxi_value { color: #ffe600; }
+.Ape42_bksqo_oxi.spo2-low  .Ape42_bksqo_oxi_value { color: #ff9100; }
 .Ape42_bksqo_oxi.spo2-crit .Ape42_bksqo_oxi_value { color: #ff3b4e; }
 
 /* ── Oxygen lever ────────────────────────────────────────────────────────── */
