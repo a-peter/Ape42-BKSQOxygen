@@ -170,6 +170,21 @@
 .Ape42_bksqo_lever.oxygen-off .Ape42_bksqo_lever_off { color: #ffffff; }
 .Ape42_bksqo_lever.oxygen-on  .Ape42_bksqo_lever_on  { color: #4cff7a; }
 
+/* "OXYGEN" stacked upright just left of the slot, centred on it (slot centre = 80px).
+   Font 10px: 6 lines x 10px = 60px -> top = 80 - 30 = 50px; left edge at 13.5px, about halfway to the slot.
+   Line height kept tight so the grip in its end positions doesn't cover O / N. */
+.Ape42_bksqo_lever_name {
+    position: absolute;
+    left: 1.35em;
+    top: 5em;
+    width: 1em;
+    text-align: center;
+    font-size: 0.625em;
+    line-height: 1em;
+    font-weight: bold;
+    color: #d8d8d8;
+}
+
 /* Vertical guide slot the lever runs in */
 .Ape42_bksqo_lever_slot {
     position: absolute;
