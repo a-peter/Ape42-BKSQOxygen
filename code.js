@@ -1,4 +1,4 @@
-// Version 0.1.0
+// Version 1.0.0
 // Author: Ape42
 
 const PSI_MAX       = 1850; // full bottle
@@ -132,7 +132,7 @@ style(() => {
 info(() => {
     const { spo2, oxygenOn, psi } = this.widgetStore;
     if (spo2 === null) return 'BKSQ Oxygen';
-    return `SpO2 ${spo2} %\nO2 ${oxygenOn ? 'ON' : 'OFF'}\n${psi} PSI`;
+    return `O2 ${oxygenOn ? 'ON' : 'OFF'}<br>SpO2 ${spo2} %<br>${psi} PSI`;
 });
 
 html_created(el => {
