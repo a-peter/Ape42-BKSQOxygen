@@ -119,6 +119,7 @@
     position: absolute;
     top: 0.3636em;
     left: 0.5455em;
+    font-family: Arial, sans-serif; /* Consolas bold looks thin at this size */
     font-size: 0.6875em;
     font-weight: bold;
     color: #1b2110;

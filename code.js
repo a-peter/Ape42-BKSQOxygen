@@ -1,4 +1,4 @@
-// Version 1.0.0
+// Version 1.1.0
 // Author: Ape42
 
 const PSI_MAX       = 1850; // full bottle

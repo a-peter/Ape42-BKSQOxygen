@@ -4,7 +4,7 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 
 ## Features
 
-- **Pulse oximeter** (left): blood oxygen saturation in %, rounded to whole numbers. Colour follows clinical thresholds: normal ≥ 95 %, yellow 90–94 % (mild hypoxemia), orange 85–89 % (moderate), red below 85 % (severe).
+- **Pulse oximeter** (left): green LCD with 7-segment digits showing blood oxygen saturation in %, rounded to whole numbers. The LCD backlight follows clinical thresholds: green ≥ 95 %, yellow 90–94 % (mild hypoxemia), orange 85–89 % (moderate), red below 85 % (severe).
 - **Oxygen lever** (middle): ivory cylinder grip sliding vertically in a slot — up = OFF, down = ON.
 - **Oxygen bottle** (right): fill level and pressure in PSI (full = 1850 PSI). Amber below 25 %, red below 10 %.
 - Click the Flow tile to show/hide the overlay.
