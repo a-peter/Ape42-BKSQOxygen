@@ -86,7 +86,7 @@ loop_15hz(() => {
     // Pulse oximeter
     if (spo2 !== ws.spo2) {
         ws.spo2 = spo2;
-        this.spo2_el.textContent = spo2;
+        this.spo2_el.textContent = Math.min(spo2, 99); // two-digit display
         this.oxi_el.classList.toggle('spo2-crit', spo2 < SPO2_CRIT);
         this.oxi_el.classList.toggle('spo2-low',  spo2 >= SPO2_CRIT && spo2 < SPO2_LOW);
         this.oxi_el.classList.toggle('spo2-mild', spo2 >= SPO2_LOW  && spo2 < SPO2_MILD);
