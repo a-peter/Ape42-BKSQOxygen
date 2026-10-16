@@ -8,8 +8,8 @@
     "minimum_game_version": "1.0.0",
     "release_notes": {
         "neutral": {
-            "LastUpdate": "First version",
-            "OlderHistory": ""
+            "LastUpdate": "Pulse oximeter redesigned as green LCD with 7-segment digits; warnings tint the LCD backlight",
+            "OlderHistory": "1.0.0: First version"
         }
     }
 }
