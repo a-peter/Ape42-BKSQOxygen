@@ -53,3 +53,5 @@ git push origin v1.0.0
 ## License
 
 [MIT](LICENSE)
+
+The SpO₂ display uses the font **DSEG7 Modern Bold Italic** by [keshikan](http://www.keshikan.net) (Reserved Font Name "DSEG"), licensed under the [SIL Open Font License 1.1](fonts/DSEG-LICENSE.txt). It is embedded unmodified in `code.css`; the source file is in [`fonts/`](fonts).
