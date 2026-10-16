@@ -112,6 +112,11 @@
     line-height: 1.1em;
     font-weight: bold;
     color: #35e0ff;
+    /* Consolas has no heavier weight than bold: thicken the strokes with an
+       outline and shadows in the text colour. Colours are explicit per state
+       (Coherent GT may not support colour-less shadows / currentColor). */
+    -webkit-text-stroke: 0.03em #35e0ff;
+    text-shadow: 0.03em 0 0 #35e0ff, -0.03em 0 0 #35e0ff, 0 0.03em 0 #35e0ff, 0 -0.03em 0 #35e0ff;
 }
 
 .Ape42_bksqo_oxi_heart {
@@ -129,9 +134,21 @@
     100% { opacity: 1; }
 }
 
-.Ape42_bksqo_oxi.spo2-mild .Ape42_bksqo_oxi_value { color: #ffe600; }
-.Ape42_bksqo_oxi.spo2-low  .Ape42_bksqo_oxi_value { color: #ff9100; }
-.Ape42_bksqo_oxi.spo2-crit .Ape42_bksqo_oxi_value { color: #ff3b4e; }
+.Ape42_bksqo_oxi.spo2-mild .Ape42_bksqo_oxi_value {
+    color: #ffe600;
+    -webkit-text-stroke-color: #ffe600;
+    text-shadow: 0.03em 0 0 #ffe600, -0.03em 0 0 #ffe600, 0 0.03em 0 #ffe600, 0 -0.03em 0 #ffe600;
+}
+.Ape42_bksqo_oxi.spo2-low .Ape42_bksqo_oxi_value {
+    color: #ff9100;
+    -webkit-text-stroke-color: #ff9100;
+    text-shadow: 0.03em 0 0 #ff9100, -0.03em 0 0 #ff9100, 0 0.03em 0 #ff9100, 0 -0.03em 0 #ff9100;
+}
+.Ape42_bksqo_oxi.spo2-crit .Ape42_bksqo_oxi_value {
+    color: #ff3b4e;
+    -webkit-text-stroke-color: #ff3b4e;
+    text-shadow: 0.03em 0 0 #ff3b4e, -0.03em 0 0 #ff3b4e, 0 0.03em 0 #ff3b4e, 0 -0.03em 0 #ff3b4e;
+}
 
 /* ── Oxygen lever ────────────────────────────────────────────────────────── */
 
