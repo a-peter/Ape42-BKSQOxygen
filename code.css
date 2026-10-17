@@ -303,9 +303,84 @@
 }
 
 .Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_slot,
-.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_grip {
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_grip,
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_title,
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_label,
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_name {
     display: none;
 }
+
+/* Brushed metal plate with rounded corners (fine horizontal lines over a
+   soft left-to-right sheen) */
+.Ape42_bksqo_lever.aircraft-commander {
+    border-color: #5d6267;
+    background:
+        repeating-linear-gradient(to bottom,
+            rgba(255, 255, 255, 0.10) 0, rgba(255, 255, 255, 0.10) 0.0625em,
+            rgba(0, 0, 0, 0.06) 0.0625em, rgba(0, 0, 0, 0.06) 0.125em,
+            rgba(255, 255, 255, 0) 0.125em, rgba(255, 255, 255, 0) 0.1875em),
+        linear-gradient(to right, #8f959a 0%, #cfd3d7 30%, #b3b8bd 55%, #868b90 100%);
+    box-shadow: inset 0 0 0.25em rgba(0, 0, 0, 0.4);
+}
+
+/* Painted frame: a thick black line 4px in from the edge, then a thin one */
+.Ape42_bksqo_lever.aircraft-commander::before,
+.Ape42_bksqo_lever.aircraft-commander::after {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-color: #111111;
+}
+
+.Ape42_bksqo_lever.aircraft-commander::before {
+    top: 0.25em;
+    left: 0.25em;
+    right: 0.25em;
+    bottom: 0.25em;
+    border-width: 0.1875em;
+    border-radius: 0.3125em;
+}
+
+.Ape42_bksqo_lever.aircraft-commander::after {
+    top: 0.5625em;
+    left: 0.5625em;
+    right: 0.5625em;
+    bottom: 0.5625em;
+    border-width: 0.0625em;
+    border-radius: 0.1875em;
+}
+
+/* Painted labels, rotated 90° to the left. Each box is centred on its spot
+   and rotated around its centre (sizes in em of the 9px font):
+   OXYGEN SYSTEM centred at (16, 80)px, OFF at (67, 42)px, ON at (67, 118)px (knob centres) */
+.Ape42_bksqo_cmd_text {
+    position: absolute;
+    height: 1.2222em;
+    line-height: 1.2222em;
+    text-align: center;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+    font-size: 0.5625em;
+    font-weight: bold;
+    color: #111111;
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+
+.Ape42_bksqo_cmd_title {
+    left: -3.2222em;
+    top: 8.2778em;
+    width: 10em;
+}
+
+.Ape42_bksqo_cmd_off,
+.Ape42_bksqo_cmd_on {
+    left: 6.1111em;
+    width: 2.6667em;
+}
+
+.Ape42_bksqo_cmd_off { top: 4.0556em; }
+.Ape42_bksqo_cmd_on  { top: 12.5em; }
 
 /* Chrome bushing in the panel the rod comes out of */
 .Ape42_bksqo_cmd_bushing {
@@ -322,9 +397,9 @@
 
 .Ape42_bksqo_cmd_rod {
     position: absolute;
-    left: 2.4375em;
+    left: 2.3438em; /* centred on x = 42px */
     top: 2em;
-    width: 0.375em;
+    width: 0.5625em;
     height: 0;
     background: linear-gradient(to right, #7d8287 0%, #f7f9fb 40%, #c2c7cc 60%, #6a6f74 100%);
     -webkit-transition: height 0.4s ease-in-out;
@@ -336,8 +411,8 @@
     left: 1.375em;
     top: 2em;
     width: 2.5em;
-    height: 1.625em;
-    border-radius: 0.4375em 0.4375em 0.625em 0.625em;
+    height: 1.25em;
+    border-radius: 0.375em 0.375em 0.5em 0.5em;
     border-top: 0.0625em solid #4a4a4a;
     box-sizing: border-box;
     background: linear-gradient(to right, #050505 0%, #383838 30%, #1c1c1c 55%, #000000 100%);
