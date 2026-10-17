@@ -15,6 +15,34 @@ const BASE_FONT_PX  = 16;   // 1em at 100 %, must match code.css
 const DBLCLICK_MS   = 250;  // single click waits this long for a possible double-click
 const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 
+// Oxygen lever per aircraft, chosen by A:TITLE. SpO2 and bottle pressure use
+// the same L:vars in all supported aircraft.
+const OXYGEN_SOURCES = [
+    {
+        // Black Square Commander: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
+        // 0 = off, 100 = on in unit 'percent' (unit 'number' reads 0..1)
+        name:   'Commander (B:PASSENGER_CABIN_HEAT_5)',
+        match:  'Black Square Commander',
+        look:   'aircraft-commander', // lever CSS: knob on chrome rod
+        getVar: 'B:PASSENGER_CABIN_HEAT_5',
+        setVar: 'B:PASSENGER_CABIN_HEAT_5_Set',
+        unit:   'percent',
+        on:     100,
+        off:    0,
+    },
+    {
+        // Default (Black Square Caravan 208): L:var, 0 = off, 1 = on
+        name:   'default (L:var_OxygenOn)',
+        match:  '',
+        look:   'aircraft-caravan',   // lever CSS: ivory grip in slot
+        getVar: 'L:var_OxygenOn',
+        setVar: 'L:var_OxygenOn',
+        unit:   'number',
+        on:     1,
+        off:    0,
+    },
+];
+
 this.host_el   = null;
 this.oxi_el    = null;
 this.spo2_el   = null;
@@ -55,9 +83,30 @@ const applyScale = () => {
     this.host_el.style.fontSize = `${BASE_FONT_PX * this.widgetStore.scale}px`;
 };
 
+// Pick the oxygen source for the loaded aircraft; logs when it changes
+this.oxygenSource = OXYGEN_SOURCES[OXYGEN_SOURCES.length - 1];
+this.aircraftTitle = null;
+const updateOxygenSource = () => {
+    const title = String(this.$api.variables.get('A:TITLE', 'string') || '');
+    if (title === this.aircraftTitle) return;
+    this.aircraftTitle = title;
+    this.oxygenSource  = OXYGEN_SOURCES.find(src => title.indexOf(src.match) >= 0);
+    if (this.lever_el) {
+        // explicit remove/add (classList.toggle with force did not stick here)
+        OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
+        this.lever_el.classList.add(this.oxygenSource.look);
+    }
+    console.log(`BKSQO: aircraft "${title}" -> oxygen lever via ${this.oxygenSource.name}`);
+};
+
+const isOxygenOn = () => {
+    const src = this.oxygenSource;
+    return (Number(this.$api.variables.get(src.getVar, src.unit)) || 0) >= (src.on + src.off) / 2;
+};
+
 const toggleOxygen = () => {
-    const on = Number(this.$api.variables.get('L:var_OxygenOn', 'number')) >= 0.5;
-    this.$api.variables.set('L:var_OxygenOn', 'number', on ? 0 : 1);
+    const src = this.oxygenSource;
+    this.$api.variables.set(src.setVar, src.unit, isOxygenOn() ? src.off : src.on);
 };
 
 // One wheel notch = SCALE_STEP bigger (dir 1) or smaller (dir -1)
@@ -79,8 +128,9 @@ loop_15hz(() => {
 
     const ws       = this.widgetStore;
     const read     = (name) => Number(this.$api.variables.get(name, 'number')) || 0;
+    updateOxygenSource();
     const spo2     = Math.round(read('L:var_PulseOxyPercent'));
-    const oxygenOn = read('L:var_OxygenOn') >= 0.5;
+    const oxygenOn = isOxygenOn();
     const psi      = Math.round(read('L:var_OxygenPressure'));
 
     // Pulse oximeter
@@ -143,6 +193,7 @@ html_created(el => {
     this.bottle_el = el.querySelector('.Ape42_bksqo_bottle');
     this.fill_el   = el.querySelector('#Ape42_bksqo_fill');
     this.psi_el    = el.querySelector('#Ape42_bksqo_psi');
+    this.aircraftTitle = null; // re-apply the lever look on the next loop
 
     // Restore saved position
     if (this.widgetStore.posX !== null) {
