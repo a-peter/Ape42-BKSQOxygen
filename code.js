@@ -1,7 +1,6 @@
 // Version 2.0.0
 // Author: Ape42
 
-const PSI_MAX       = 1850; // full bottle
 // SpO2 colour bands (common clinical hypoxemia thresholds)
 const SPO2_MILD     = 95;   // below: mild hypoxemia     -> yellow
 const SPO2_LOW      = 90;   // below: moderate hypoxemia -> orange
@@ -15,31 +14,46 @@ const BASE_FONT_PX  = 16;   // 1em at 100 %, must match code.css
 const DBLCLICK_MS   = 250;  // single click waits this long for a possible double-click
 const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 
-// Oxygen lever per aircraft, chosen by A:TITLE. SpO2 and bottle pressure use
-// the same L:vars in all supported aircraft.
+// Oxygen lever per aircraft, chosen by A:TITLE (the first entry whose `match`
+// strings are all contained in the title). SpO2 and bottle pressure use the
+// same L:vars in all supported aircraft; only the full-bottle pressure differs.
 const OXYGEN_SOURCES = [
     {
         // Black Square Commander: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
         // 0 = off, 100 = on in unit 'percent' (unit 'number' reads 0..1)
         name:   'Commander (B:PASSENGER_CABIN_HEAT_5)',
-        match:  'Black Square Commander',
+        match:  ['Black Square Commander'],
         look:   'aircraft-commander', // lever CSS: knob on chrome rod
         getVar: 'B:PASSENGER_CABIN_HEAT_5',
         setVar: 'B:PASSENGER_CABIN_HEAT_5_Set',
         unit:   'percent',
         on:     100,
         off:    0,
+        psiMax: 1850,
+    },
+    {
+        // Black Square Bonanza Professional: L:var, 0 = off, 1 = on
+        name:   'Bonanza (L:var_OxygenOn)',
+        match:  ['Black Square', 'Bonanza Professional'], // e.g. "Black Square B36TP Bonanza Professional N6060E"
+        look:   'aircraft-bonanza',   // lever CSS: chrome toggle switch, up = ON
+        getVar: 'L:var_OxygenOn',
+        setVar: 'L:var_OxygenOn',
+        unit:   'number',
+        on:     1,
+        off:    0,
+        psiMax: 2150,
     },
     {
         // Default (Black Square Caravan Professional): L:var, 0 = off, 1 = on
         name:   'default (L:var_OxygenOn)',
-        match:  '',
+        match:  [],
         look:   'aircraft-caravan',   // lever CSS: ivory grip in slot
         getVar: 'L:var_OxygenOn',
         setVar: 'L:var_OxygenOn',
         unit:   'number',
         on:     1,
         off:    0,
+        psiMax: 1850,
     },
 ];
 
@@ -90,7 +104,8 @@ const updateOxygenSource = () => {
     const title = String(this.$api.variables.get('A:TITLE', 'string') || '');
     if (title === this.aircraftTitle) return;
     this.aircraftTitle = title;
-    this.oxygenSource  = OXYGEN_SOURCES.find(src => title.indexOf(src.match) >= 0);
+    this.oxygenSource  = OXYGEN_SOURCES.find(src => src.match.every(m => title.indexOf(m) >= 0));
+    this.widgetStore.psi = null; // redraw the bottle with this aircraft's full pressure
     if (this.lever_el) {
         // explicit remove/add (classList.toggle with force did not stick here)
         OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
@@ -152,7 +167,7 @@ loop_15hz(() => {
     // Oxygen bottle
     if (psi !== ws.psi) {
         ws.psi = psi;
-        const pct = Math.max(0, Math.min(100, psi / PSI_MAX * 100));
+        const pct = Math.max(0, Math.min(100, psi / this.oxygenSource.psiMax * 100));
         this.fill_el.style.height = pct + '%';
         this.psi_el.textContent   = psi + ' PSI';
         this.bottle_el.classList.toggle('psi-crit', pct < PSI_CRIT_PCT);
