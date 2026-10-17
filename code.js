@@ -19,10 +19,10 @@ const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 // same L:vars in all supported aircraft; only the full-bottle pressure differs.
 const OXYGEN_SOURCES = [
     {
-        // Black Square Commander: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
+        // Black Square Commander 114TC: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
         // 0 = off, 100 = on in unit 'percent' (unit 'number' reads 0..1)
-        name:   'Commander (B:PASSENGER_CABIN_HEAT_5)',
-        match:  ['Black Square Commander'],
+        name:   'Commander 114TC (B:PASSENGER_CABIN_HEAT_5)',
+        match:  ['Black Square Commander 114TC'],
         look:   'aircraft-commander', // lever CSS: knob on chrome rod
         getVar: 'B:PASSENGER_CABIN_HEAT_5',
         setVar: 'B:PASSENGER_CABIN_HEAT_5_Set',
@@ -30,6 +30,15 @@ const OXYGEN_SOURCES = [
         on:     100,
         off:    0,
         psiMax: 1850,
+    },
+    {
+        // Other Black Square Commander variants (114): no oxygen system, only the
+        // pulse oximeter. Lever and bottle are marked "Not available", clicks do nothing.
+        name:     'Commander without oxygen system',
+        match:    ['Black Square Commander'],
+        look:     'aircraft-commander',
+        noOxygen: true,
+        psiMax:   1850,
     },
     {
         // Black Square Bonanza Professional: L:var, 0 = off, 1 = on
@@ -111,16 +120,22 @@ const updateOxygenSource = () => {
         OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
         this.lever_el.classList.add(this.oxygenSource.look);
     }
+    if (this.host_el) {
+        this.host_el.classList.remove('no-oxygen');
+        if (this.oxygenSource.noOxygen) this.host_el.classList.add('no-oxygen');
+    }
     console.log(`BKSQO: aircraft "${title}" -> oxygen lever via ${this.oxygenSource.name}`);
 };
 
 const isOxygenOn = () => {
     const src = this.oxygenSource;
+    if (src.noOxygen) return false;
     return (Number(this.$api.variables.get(src.getVar, src.unit)) || 0) >= (src.on + src.off) / 2;
 };
 
 const toggleOxygen = () => {
     const src = this.oxygenSource;
+    if (src.noOxygen) return;
     this.$api.variables.set(src.setVar, src.unit, isOxygenOn() ? src.off : src.on);
 };
 
@@ -185,6 +200,7 @@ loop_15hz(() => {
 });
 
 state(() => {
+    if (this.oxygenSource.noOxygen) return 'mdi:gas-cylinder:N/A';
     return this.widgetStore.oxygenOn ? 'mdi:gas-cylinder:ON' : 'mdi:gas-cylinder:OFF';
 });
 
@@ -197,6 +213,7 @@ style(() => {
 info(() => {
     const { spo2, oxygenOn, psi } = this.widgetStore;
     if (spo2 === null) return 'BKSQ Oxygen';
+    if (this.oxygenSource.noOxygen) return `O2 N/A<br>SpO2 ${spo2} %`;
     return `O2 ${oxygenOn ? 'ON' : 'OFF'}<br>SpO2 ${spo2} %<br>${psi} PSI`;
 });
 

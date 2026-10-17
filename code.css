@@ -541,6 +541,38 @@
     background: radial-gradient(circle at 40% 35%, #c9ced3 0%, #6d7277 60%, #2e3134 100%);
 }
 
+/* ── No oxygen system (Commander 114) ───────────────────────────────────
+   Lever and bottle are dimmed and covered by a red diagonal "Not available".
+   The overlay spans both: x = 130..292px, y = 12..172px of the widget. */
+
+.Ape42_bksqo_na {
+    display: none;
+}
+
+#Ape42_bksqo.no-oxygen .Ape42_bksqo_lever,
+#Ape42_bksqo.no-oxygen .Ape42_bksqo_bottle {
+    opacity: 0.45;
+}
+
+#Ape42_bksqo.no-oxygen .Ape42_bksqo_na {
+    display: block;
+    position: absolute;
+    left: 6.5em;      /* 130px in em of the 20px font */
+    top: 4em;         /* 80px: line centre at y = 92px */
+    width: 8.1em;     /* 162px */
+    height: 1.2em;
+    line-height: 1.2em;
+    text-align: center;
+    white-space: nowrap;
+    font-family: Arial, sans-serif;
+    font-size: 1.25em; /* 20px */
+    font-weight: bold;
+    color: #e0202a;
+    pointer-events: none;
+    -webkit-transform: rotate(-40deg);
+    transform: rotate(-40deg);
+}
+
 /* ── Oxygen bottle ───────────────────────────────────────────────────────── */
 
 .Ape42_bksqo_bottle {

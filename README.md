@@ -2,6 +2,8 @@
 
 A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the oxygen system of the **Black Square Caravan Professional**, the **Black Square Bonanza Professional** and the **Black Square Commander** in Microsoft Flight Simulator.
 
+The Commander 114 (without TC) has no oxygen system: the widget still shows the pulse oximeter, while lever and bottle are dimmed and marked "Not available" in red; clicking the lever does nothing.
+
 ## Features
 
 - **Pulse oximeter** (left): green LCD with 7-segment digits showing blood oxygen saturation in %, rounded to whole numbers. The LCD backlight follows clinical thresholds: green ≥ 95 %, yellow 90–94 % (mild hypoxemia), orange 85–89 % (moderate), red below 85 % (severe).
@@ -22,10 +24,10 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 |---------|----------|-------|
 | SpO₂ | `L:var_PulseOxyPercent` | 0 – 100 |
 | Lever (Caravan / Bonanza Professional) | `L:var_OxygenOn` | 0 = off, 1 = on |
-| Lever (Commander) | read `B:PASSENGER_CABIN_HEAT_5`, set `B:PASSENGER_CABIN_HEAT_5_Set` | 0 = off, 100 = on |
+| Lever (Commander 114TC) | read `B:PASSENGER_CABIN_HEAT_5`, set `B:PASSENGER_CABIN_HEAT_5_Set` | 0 = off, 100 = on |
 | Bottle | `L:var_OxygenPressure` | 0 – 1850 PSI (Bonanza 0 – 2150) |
 
-The lever variable and look are chosen by the aircraft title (`A:TITLE`): "Black Square Commander" uses the B-variables, "Black Square" + "Bonanza Professional" (any variant, e.g. B36TP) the toggle switch look, anything else the Caravan Professional.
+The lever variable and look are chosen by the aircraft title (`A:TITLE`): "Black Square Commander 114TC" uses the B-variables, any other "Black Square Commander" has no oxygen system, "Black Square" + "Bonanza Professional" (any variant, e.g. B36TP) the toggle switch look, anything else the Caravan Professional.
 
 ## Installation
 
