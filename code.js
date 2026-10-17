@@ -23,6 +23,7 @@ const OXYGEN_SOURCES = [
         // 0 = off, 100 = on in unit 'percent' (unit 'number' reads 0..1)
         name:   'Commander (B:PASSENGER_CABIN_HEAT_5)',
         match:  'Black Square Commander',
+        look:   'aircraft-commander', // lever CSS: knob on chrome rod
         getVar: 'B:PASSENGER_CABIN_HEAT_5',
         setVar: 'B:PASSENGER_CABIN_HEAT_5_Set',
         unit:   'percent',
@@ -33,6 +34,7 @@ const OXYGEN_SOURCES = [
         // Default (Black Square Caravan 208): L:var, 0 = off, 1 = on
         name:   'default (L:var_OxygenOn)',
         match:  '',
+        look:   'aircraft-caravan',   // lever CSS: ivory grip in slot
         getVar: 'L:var_OxygenOn',
         setVar: 'L:var_OxygenOn',
         unit:   'number',
@@ -89,6 +91,11 @@ const updateOxygenSource = () => {
     if (title === this.aircraftTitle) return;
     this.aircraftTitle = title;
     this.oxygenSource  = OXYGEN_SOURCES.find(src => title.indexOf(src.match) >= 0);
+    if (this.lever_el) {
+        // explicit remove/add (classList.toggle with force did not stick here)
+        OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
+        this.lever_el.classList.add(this.oxygenSource.look);
+    }
     console.log(`BKSQO: aircraft "${title}" -> oxygen lever via ${this.oxygenSource.name}`);
 };
 
@@ -186,6 +193,7 @@ html_created(el => {
     this.bottle_el = el.querySelector('.Ape42_bksqo_bottle');
     this.fill_el   = el.querySelector('#Ape42_bksqo_fill');
     this.psi_el    = el.querySelector('#Ape42_bksqo_psi');
+    this.aircraftTitle = null; // re-apply the lever look on the next loop
 
     // Restore saved position
     if (this.widgetStore.posX !== null) {

@@ -289,6 +289,71 @@
     top: 6.75em;
 }
 
+/* ── Commander lever: black plastic knob on a chrome rod ─────────────────
+   OFF = pushed in (only the knob, right below the panel bushing),
+   ON  = pulled out (knob down, chrome rod visible). Rod height and knob
+   position animate together so the rod stays attached to the knob. */
+
+.Ape42_bksqo_cmd {
+    display: none;
+}
+
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_cmd {
+    display: block;
+}
+
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_slot,
+.Ape42_bksqo_lever.aircraft-commander .Ape42_bksqo_lever_grip {
+    display: none;
+}
+
+/* Chrome bushing in the panel the rod comes out of */
+.Ape42_bksqo_cmd_bushing {
+    position: absolute;
+    left: 2em;
+    top: 1.375em;
+    width: 1.25em;
+    height: 0.625em;
+    border: 0.0625em solid #2a2d30;
+    border-radius: 0.1875em;
+    background: linear-gradient(to right, #6d7277 0%, #e9ecef 35%, #b4b9be 60%, #5d6267 100%);
+    box-sizing: border-box;
+}
+
+.Ape42_bksqo_cmd_rod {
+    position: absolute;
+    left: 2.4375em;
+    top: 2em;
+    width: 0.375em;
+    height: 0;
+    background: linear-gradient(to right, #7d8287 0%, #f7f9fb 40%, #c2c7cc 60%, #6a6f74 100%);
+    -webkit-transition: height 0.4s ease-in-out;
+    transition: height 0.4s ease-in-out;
+}
+
+.Ape42_bksqo_cmd_knob {
+    position: absolute;
+    left: 1.375em;
+    top: 2em;
+    width: 2.5em;
+    height: 1.625em;
+    border-radius: 0.4375em 0.4375em 0.625em 0.625em;
+    border-top: 0.0625em solid #4a4a4a;
+    box-sizing: border-box;
+    background: linear-gradient(to right, #050505 0%, #383838 30%, #1c1c1c 55%, #000000 100%);
+    box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.7);
+    -webkit-transition: top 0.4s ease-in-out;
+    transition: top 0.4s ease-in-out;
+}
+
+.Ape42_bksqo_lever.oxygen-on .Ape42_bksqo_cmd_rod {
+    height: 4.75em;
+}
+
+.Ape42_bksqo_lever.oxygen-on .Ape42_bksqo_cmd_knob {
+    top: 6.75em;
+}
+
 /* ── Oxygen bottle ───────────────────────────────────────────────────────── */
 
 .Ape42_bksqo_bottle {
