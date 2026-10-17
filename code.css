@@ -542,8 +542,12 @@
 }
 
 /* ── No oxygen system (Commander 114) ───────────────────────────────────
-   Lever and bottle are dimmed and covered by a red diagonal "Not available".
-   The overlay spans both: x = 130..292px, y = 12..172px of the widget. */
+   Lever and bottle are dimmed and covered by a red diagonal two-line note.
+   The overlay area is x = 130..292px, y = 12..172px (centre 211, 92).
+   Both lines are separate elements, each rotated by -40deg around its own
+   centre. Their centres sit 12px before/after the overlay centre on the
+   rotated "down" axis (sin 40, cos 40) = (0.643, 0.766):
+     main at (203.3, 82.8), sub at (218.7, 101.2); boxes 200 x 24px */
 
 .Ape42_bksqo_na {
     display: none;
@@ -557,9 +561,7 @@
 #Ape42_bksqo.no-oxygen .Ape42_bksqo_na {
     display: block;
     position: absolute;
-    left: 6.5em;      /* 130px in em of the 20px font */
-    top: 4em;         /* 80px: line centre at y = 92px */
-    width: 8.1em;     /* 162px */
+    width: 10em;      /* 200px in em of the 20px font */
     height: 1.2em;
     line-height: 1.2em;
     text-align: center;
@@ -571,6 +573,16 @@
     pointer-events: none;
     -webkit-transform: rotate(-40deg);
     transform: rotate(-40deg);
+}
+
+#Ape42_bksqo.no-oxygen .Ape42_bksqo_na_main {
+    left: 5.164em;    /* 103.3px */
+    top: 3.5405em;    /* 70.8px */
+}
+
+#Ape42_bksqo.no-oxygen .Ape42_bksqo_na_sub {
+    left: 5.936em;    /* 118.7px */
+    top: 4.4595em;    /* 89.2px */
 }
 
 /* ── Oxygen bottle ───────────────────────────────────────────────────────── */
