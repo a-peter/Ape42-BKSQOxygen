@@ -1,7 +1,6 @@
 // Version 2.0.0
 // Author: Ape42
 
-const PSI_MAX       = 1850; // full bottle
 // SpO2 colour bands (common clinical hypoxemia thresholds)
 const SPO2_MILD     = 95;   // below: mild hypoxemia     -> yellow
 const SPO2_LOW      = 90;   // below: moderate hypoxemia -> orange
@@ -15,31 +14,79 @@ const BASE_FONT_PX  = 16;   // 1em at 100 %, must match code.css
 const DBLCLICK_MS   = 250;  // single click waits this long for a possible double-click
 const DRAG_PX       = 3;    // mouse moved more than this = drag, not a click
 
-// Oxygen lever per aircraft, chosen by A:TITLE. SpO2 and bottle pressure use
-// the same L:vars in all supported aircraft.
+// Oxygen lever per aircraft, chosen by A:TITLE (the first entry whose `match`
+// strings are all contained in the title). SpO2 and bottle pressure use the
+// same L:vars in all supported aircraft; only the full-bottle pressure differs.
 const OXYGEN_SOURCES = [
     {
-        // Black Square Commander: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
+        // Black Square Commander 114TC: read B:PASSENGER_CABIN_HEAT_5, write B:..._Set,
         // 0 = off, 100 = on in unit 'percent' (unit 'number' reads 0..1)
-        name:   'Commander (B:PASSENGER_CABIN_HEAT_5)',
-        match:  'Black Square Commander',
+        name:   'Commander 114TC (B:PASSENGER_CABIN_HEAT_5)',
+        match:  ['Black Square Commander 114TC'],
         look:   'aircraft-commander', // lever CSS: knob on chrome rod
         getVar: 'B:PASSENGER_CABIN_HEAT_5',
         setVar: 'B:PASSENGER_CABIN_HEAT_5_Set',
         unit:   'percent',
         on:     100,
         off:    0,
+        psiMax: 1850,
+    },
+    {
+        // Other Black Square Commander variants (114): no oxygen system, only the
+        // pulse oximeter. Lever and bottle are marked "Not available", clicks do nothing.
+        name:     'Commander without oxygen system',
+        match:    ['Black Square Commander'],
+        look:     'aircraft-commander',
+        noOxygen: true,
+        naNote:   'only in the 114TC', // second line of the "Not available" overlay
+        psiMax:   1850,
+    },
+    {
+        // Black Square Bonanza Professional: L:var, 0 = off, 1 = on
+        name:   'Bonanza (L:var_OxygenOn)',
+        match:  ['Black Square', 'Bonanza Professional'], // e.g. "Black Square B36TP Bonanza Professional N6060E"
+        look:   'aircraft-bonanza',   // lever CSS: chrome toggle switch, up = ON
+        getVar: 'L:var_OxygenOn',
+        setVar: 'L:var_OxygenOn',
+        unit:   'number',
+        on:     1,
+        off:    0,
+        psiMax: 2150,
+    },
+    {
+        // Black Square Baron 58P (pressurized): no oxygen lever, like the Commander 114
+        name:     'Baron 58P without oxygen system',
+        match:    ['Black Square Baron 58P'],
+        look:     'aircraft-commander aircraft-baron',
+        noOxygen: true,
+        naNote:   'not in the 58P',
+        psiMax:   2150,
+    },
+    {
+        // Black Square Baron (all other variants, title "Black Square Baron ..."):
+        // like the Commander 114TC, but PASSENGER_CABIN_HEAT_1. Look: the
+        // Commander's pull knob on a dark panel with an "OXYGEN / PULL ON" placard.
+        name:   'Baron (B:PASSENGER_CABIN_HEAT_1)',
+        match:  ['Black Square Baron'],
+        look:   'aircraft-commander aircraft-baron', // several classes allowed
+        getVar: 'B:PASSENGER_CABIN_HEAT_1',
+        setVar: 'B:PASSENGER_CABIN_HEAT_1_Set',
+        unit:   'percent',
+        on:     100,
+        off:    0,
+        psiMax: 2150, // manual: serviced to 1850 - 2150 PSI
     },
     {
         // Default (Black Square Caravan Professional): L:var, 0 = off, 1 = on
         name:   'default (L:var_OxygenOn)',
-        match:  '',
+        match:  [],
         look:   'aircraft-caravan',   // lever CSS: ivory grip in slot
         getVar: 'L:var_OxygenOn',
         setVar: 'L:var_OxygenOn',
         unit:   'number',
         on:     1,
         off:    0,
+        psiMax: 1850,
     },
 ];
 
@@ -90,22 +137,33 @@ const updateOxygenSource = () => {
     const title = String(this.$api.variables.get('A:TITLE', 'string') || '');
     if (title === this.aircraftTitle) return;
     this.aircraftTitle = title;
-    this.oxygenSource  = OXYGEN_SOURCES.find(src => title.indexOf(src.match) >= 0);
+    this.oxygenSource  = OXYGEN_SOURCES.find(src => src.match.every(m => title.indexOf(m) >= 0));
+    this.widgetStore.psi = null; // redraw the bottle with this aircraft's full pressure
     if (this.lever_el) {
         // explicit remove/add (classList.toggle with force did not stick here)
-        OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
-        this.lever_el.classList.add(this.oxygenSource.look);
+        // `look` may hold several space-separated classes
+        OXYGEN_SOURCES.forEach(src => src.look.split(' ').forEach(cls => this.lever_el.classList.remove(cls)));
+        this.oxygenSource.look.split(' ').forEach(cls => this.lever_el.classList.add(cls));
+    }
+    if (this.host_el) {
+        this.host_el.classList.remove('no-oxygen');
+        if (this.oxygenSource.noOxygen) {
+            this.host_el.classList.add('no-oxygen');
+            this.host_el.querySelector('.Ape42_bksqo_na_sub').textContent = this.oxygenSource.naNote || '';
+        }
     }
     console.log(`BKSQO: aircraft "${title}" -> oxygen lever via ${this.oxygenSource.name}`);
 };
 
 const isOxygenOn = () => {
     const src = this.oxygenSource;
+    if (src.noOxygen) return false;
     return (Number(this.$api.variables.get(src.getVar, src.unit)) || 0) >= (src.on + src.off) / 2;
 };
 
 const toggleOxygen = () => {
     const src = this.oxygenSource;
+    if (src.noOxygen) return;
     this.$api.variables.set(src.setVar, src.unit, isOxygenOn() ? src.off : src.on);
 };
 
@@ -152,7 +210,7 @@ loop_15hz(() => {
     // Oxygen bottle
     if (psi !== ws.psi) {
         ws.psi = psi;
-        const pct = Math.max(0, Math.min(100, psi / PSI_MAX * 100));
+        const pct = Math.max(0, Math.min(100, psi / this.oxygenSource.psiMax * 100));
         this.fill_el.style.height = pct + '%';
         this.psi_el.textContent   = psi + ' PSI';
         this.bottle_el.classList.toggle('psi-crit', pct < PSI_CRIT_PCT);
@@ -170,6 +228,7 @@ loop_15hz(() => {
 });
 
 state(() => {
+    if (this.oxygenSource.noOxygen) return 'mdi:gas-cylinder:N/A';
     return this.widgetStore.oxygenOn ? 'mdi:gas-cylinder:ON' : 'mdi:gas-cylinder:OFF';
 });
 
@@ -182,6 +241,7 @@ style(() => {
 info(() => {
     const { spo2, oxygenOn, psi } = this.widgetStore;
     if (spo2 === null) return 'BKSQ Oxygen';
+    if (this.oxygenSource.noOxygen) return `O2 N/A<br>SpO2 ${spo2} %`;
     return `O2 ${oxygenOn ? 'ON' : 'OFF'}<br>SpO2 ${spo2} %<br>${psi} PSI`;
 });
 
