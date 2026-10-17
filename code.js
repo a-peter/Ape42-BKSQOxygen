@@ -1,4 +1,4 @@
-// Version 1.1.0
+// Version 2.0.0
 // Author: Ape42
 
 const PSI_MAX       = 1850; // full bottle
@@ -31,7 +31,7 @@ const OXYGEN_SOURCES = [
         off:    0,
     },
     {
-        // Default (Black Square Caravan 208): L:var, 0 = off, 1 = on
+        // Default (Black Square Caravan Professional): L:var, 0 = off, 1 = on
         name:   'default (L:var_OxygenOn)',
         match:  '',
         look:   'aircraft-caravan',   // lever CSS: ivory grip in slot

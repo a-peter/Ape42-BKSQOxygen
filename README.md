@@ -1,11 +1,13 @@
 # BKSQ Oxygen — Flow Pro Widget
 
-A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the oxygen system of the **Black Square Caravan 208** and the **Black Square Commander** in Microsoft Flight Simulator.
+A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the oxygen system of the **Black Square Caravan Professional** and the **Black Square Commander** in Microsoft Flight Simulator.
 
 ## Features
 
 - **Pulse oximeter** (left): green LCD with 7-segment digits showing blood oxygen saturation in %, rounded to whole numbers. The LCD backlight follows clinical thresholds: green ≥ 95 %, yellow 90–94 % (mild hypoxemia), orange 85–89 % (moderate), red below 85 % (severe).
-- **Oxygen lever** (middle): ivory cylinder grip sliding vertically in a slot — up = OFF, down = ON.
+- **Oxygen lever** (middle), styled after the loaded aircraft — up = OFF, down = ON:
+  - Caravan Professional: ivory cylinder grip sliding vertically in a slot.
+  - Commander: black knob on a chrome rod (pushed in = OFF, pulled out = ON) on a brushed metal plate labelled "OXYGEN SYSTEM".
 - **Oxygen bottle** (right): fill level and pressure in PSI (full = 1850 PSI). Amber below 25 %, red below 10 %.
 - Click the Flow tile to show/hide the overlay.
 - Drag the overlay to reposition it — the position is saved automatically.
@@ -18,11 +20,11 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 | Display | Variable | Range |
 |---------|----------|-------|
 | SpO₂ | `L:var_PulseOxyPercent` | 0 – 100 |
-| Lever (Caravan) | `L:var_OxygenOn` | 0 = off, 1 = on |
+| Lever (Caravan Professional) | `L:var_OxygenOn` | 0 = off, 1 = on |
 | Lever (Commander) | read `B:PASSENGER_CABIN_HEAT_5`, set `B:PASSENGER_CABIN_HEAT_5_Set` | 0 = off, 100 = on |
 | Bottle | `L:var_OxygenPressure` | 0 – 1850 PSI |
 
-The lever variable is chosen by the aircraft title (`A:TITLE`): if it contains "Black Square Commander" the B-variables are used, otherwise the Caravan's L:var.
+The lever variable is chosen by the aircraft title (`A:TITLE`): if it contains "Black Square Commander" the B-variables are used, otherwise the Caravan Professional's L:var.
 
 ## Installation
 
