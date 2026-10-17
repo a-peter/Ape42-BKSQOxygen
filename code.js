@@ -38,6 +38,7 @@ const OXYGEN_SOURCES = [
         match:    ['Black Square Commander'],
         look:     'aircraft-commander',
         noOxygen: true,
+        naNote:   'only in the 114TC', // second line of the "Not available" overlay
         psiMax:   1850,
     },
     {
@@ -51,6 +52,29 @@ const OXYGEN_SOURCES = [
         on:     1,
         off:    0,
         psiMax: 2150,
+    },
+    {
+        // Black Square Baron 58P (pressurized): no oxygen lever, like the Commander 114
+        name:     'Baron 58P without oxygen system',
+        match:    ['Black Square Baron 58P'],
+        look:     'aircraft-commander aircraft-baron',
+        noOxygen: true,
+        naNote:   'not in the 58P',
+        psiMax:   2150,
+    },
+    {
+        // Black Square Baron (all other variants, title "Black Square Baron ..."):
+        // like the Commander 114TC, but PASSENGER_CABIN_HEAT_1. Look: the
+        // Commander's pull knob on a dark panel with an "OXYGEN / PULL ON" placard.
+        name:   'Baron (B:PASSENGER_CABIN_HEAT_1)',
+        match:  ['Black Square Baron'],
+        look:   'aircraft-commander aircraft-baron', // several classes allowed
+        getVar: 'B:PASSENGER_CABIN_HEAT_1',
+        setVar: 'B:PASSENGER_CABIN_HEAT_1_Set',
+        unit:   'percent',
+        on:     100,
+        off:    0,
+        psiMax: 2150, // manual: serviced to 1850 - 2150 PSI
     },
     {
         // Default (Black Square Caravan Professional): L:var, 0 = off, 1 = on
@@ -117,12 +141,16 @@ const updateOxygenSource = () => {
     this.widgetStore.psi = null; // redraw the bottle with this aircraft's full pressure
     if (this.lever_el) {
         // explicit remove/add (classList.toggle with force did not stick here)
-        OXYGEN_SOURCES.forEach(src => this.lever_el.classList.remove(src.look));
-        this.lever_el.classList.add(this.oxygenSource.look);
+        // `look` may hold several space-separated classes
+        OXYGEN_SOURCES.forEach(src => src.look.split(' ').forEach(cls => this.lever_el.classList.remove(cls)));
+        this.oxygenSource.look.split(' ').forEach(cls => this.lever_el.classList.add(cls));
     }
     if (this.host_el) {
         this.host_el.classList.remove('no-oxygen');
-        if (this.oxygenSource.noOxygen) this.host_el.classList.add('no-oxygen');
+        if (this.oxygenSource.noOxygen) {
+            this.host_el.classList.add('no-oxygen');
+            this.host_el.querySelector('.Ape42_bksqo_na_sub').textContent = this.oxygenSource.naNote || '';
+        }
     }
     console.log(`BKSQO: aircraft "${title}" -> oxygen lever via ${this.oxygenSource.name}`);
 };
