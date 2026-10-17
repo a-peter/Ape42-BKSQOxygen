@@ -8,8 +8,8 @@
     "minimum_game_version": "1.0.0",
     "release_notes": {
         "neutral": {
-            "LastUpdate": "Support for the Black Square Commander with its own oxygen lever look",
-            "OlderHistory": "1.1.0: Pulse oximeter redesigned as green LCD with 7-segment digits; warnings tint the LCD backlight. 1.0.0: First version"
+            "LastUpdate": "Support for the Black Square Bonanza Professional and Baron; Commander 114 and Baron 58P (no oxygen lever) are marked Not available",
+            "OlderHistory": "2.0.0: Support for the Black Square Commander with its own oxygen lever look. 1.1.0: Pulse oximeter redesigned as green LCD with 7-segment digits; warnings tint the LCD backlight. 1.0.0: First version"
         }
     }
 }
