@@ -1,6 +1,6 @@
 # BKSQ Oxygen — Flow Pro Widget
 
-A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the oxygen system of the **Black Square Caravan 208** in Microsoft Flight Simulator.
+A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the oxygen system of the **Black Square Caravan 208** and the **Black Square Commander** in Microsoft Flight Simulator.
 
 ## Features
 
@@ -18,8 +18,11 @@ A widget for [Flow Pro](https://parallel42.com) by Parallel 42 that shows the ox
 | Display | Variable | Range |
 |---------|----------|-------|
 | SpO₂ | `L:var_PulseOxyPercent` | 0 – 100 |
-| Lever | `L:var_OxygenOn` | 0 = off, 1 = on |
+| Lever (Caravan) | `L:var_OxygenOn` | 0 = off, 1 = on |
+| Lever (Commander) | read `B:PASSENGER_CABIN_HEAT_5`, set `B:PASSENGER_CABIN_HEAT_5_Set` | 0 = off, 100 = on |
 | Bottle | `L:var_OxygenPressure` | 0 – 1850 PSI |
+
+The lever variable is chosen by the aircraft title (`A:TITLE`): if it contains "Black Square Commander" the B-variables are used, otherwise the Caravan's L:var.
 
 ## Installation
 
